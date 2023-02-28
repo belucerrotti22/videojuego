@@ -1,0 +1,39 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buttons button {
+    width: 80px;
+    height: 30px;
+    margin: 15px 0;
+    background-color: rgb(132, 194, 212);
+    border: 1px solid rgb(40, 137, 175);
+    border-radius: 8px;
+    font-size: 15px;
+    color: rgb(10, 71, 95);
+}
+
+.buttons button:hover {
+    background-color: rgb(110, 140, 179);
+}
+
+.buttons button:active {
+    background-color: rgb(22, 67, 134);
+}
+
+.info-game p {
+    font-size: smaller;
+    color: rgb(41, 76, 151);
+    font-family: verdana;
+}
+
+#game {
+    border-radius: 2px;
+    border: 3px solid rgb(76, 84, 196);
+    width: 400px;
+    height: 300px;
+    margin: 18px;
+    background-color: rgb(131, 154, 161);
+}
