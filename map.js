@@ -1,1 +1,17 @@
-map.js
+const emojis= {
+    '-':' ',
+    'O':'🚪',
+    'X':'💣',
+    'I':'🎁',
+    'PLAYER':'💀',
+    'BOMB_COLLISION':'🔥',
+    'GAME_OVER':'👎',
+    'WIN':'🏆',
+};
+
+const maps=[];
+maps.push(`IXXXXXXXXX-XXXXXXXXX-XXXXXXXXX-XXXXXXXXX-XXXXXXXXX-XXXXXXXXX-XXXXXXXXX-XXXXXXXXX-XXXXXXXXXOXXXXXXXXX`);
+
+maps.push(`O--XXXXXXXX--XXXXXXXXX----XXXXX--XX-XXXXX-XXX--XXXX-XXXX-XXXXX--XX--XXXX--XXX-XXXXXX---IXXXXXXXXXXXX`);
+
+maps.push(`I-----XXXXXXXXX-XXXXXX----XXXXXX-XXXXXXXXX-----XXXXXXXXX-XXXXX-----XXXXX-XXXXXXXXX-----OXXXXXXXXXXXX`);

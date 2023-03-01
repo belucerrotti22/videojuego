@@ -32,8 +32,6 @@
 #game {
     border-radius: 2px;
     border: 3px solid rgb(76, 84, 196);
-    width: 400px;
-    height: 300px;
     margin: 18px;
     background-color: rgb(131, 154, 161);
 }
