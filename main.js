@@ -9,10 +9,11 @@ const cartelGameOver = document.querySelector('#game-over');
 const player = 'PLAYER';
 const explotion = 'BOMB_COLLISION';
 const door = 'O';
+let isGameOver = false;
 let elementSize;
 let canvaSize;
 let actualPosition = [undefined, undefined];
-let nivelActual = 0;
+let nivelActual = 1;
 let mapaActual = [];
 
 window.addEventListener('load', resize);
@@ -44,17 +45,6 @@ function * iterator(maps){
         yield element;
     }
 }
-
-/*function mapaActual(){
-    let mapa = [];
-    let elements = iterator(maps);
-    for (let i = 0; i < 10; i++){
-        for (let j = 0; j < 10; j++){
-            mapa[i][j] = elements.next().value;
-        }
-    }
-    return mapa;
-}*/
 
 function startGame(){
 
@@ -92,7 +82,7 @@ function llenarMapa(){
 
 function clear(){
     game.fillStyle = "rgb(131, 154, 161)";
-    game.fillRect(actualPosition[0], actualPosition[1] - 43, 52, 58);
+    game.fillRect(actualPosition[0] + 6, actualPosition[1] - 43, 50, 51);
 }
 
 
@@ -111,50 +101,68 @@ function coordenadas(position){
 }
 
 function gameOver(){
+    isGameOver = true;
     setTimeout(() => {
         cartelGameOver.classList.toggle('inactive');
-    }, 500);
+    }, 300);
 }
 
 function moveUp(){
-    clear();
-    let actualCoordenadas = coordenadas(actualPosition);
-    console.log(actualCoordenadas);
-    if (isPossible(actualCoordenadas[0], actualCoordenadas[1] - 1)){
-        actualPosition[1] = elementSize * (actualCoordenadas[1]);
-        startGame();
-        game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
-    }else {
-        gameOver();
+    if (!isGameOver){
+        clear();
+        let actualCoordenadas = coordenadas(actualPosition);
+        console.log(actualCoordenadas);
+        if (isPossible(actualCoordenadas[0], actualCoordenadas[1] - 1)){
+            actualPosition[1] = elementSize * (actualCoordenadas[1]);
+            startGame();
+            game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
+        }else {
+            gameOver();
+        }
     }
 }
 
 function moveDown(){
-    clear();
-    game.fillRect(actualPosition[0], actualPosition[1] - 43, 52, 58);
-    let j = (actualPosition[1] / elementSize);
-    let newPosition = elementSize * (j + 1);
-    actualPosition[1] = newPosition;
-    startGame();
-    game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
+    if (!isGameOver){
+        clear();
+        let actualCoordenadas = coordenadas(actualPosition);
+        console.log(actualCoordenadas);
+        if (isPossible(actualCoordenadas[0], actualCoordenadas[1] + 1)){
+            actualPosition[1] = elementSize * (actualCoordenadas[1] + 2);
+            startGame();
+            game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
+        }else {
+            gameOver();
+        }
+    }
 }
 
 function moveRight(){
-    clear();
-    game.fillRect(actualPosition[0], actualPosition[1] - 43, 52, 58);
-    let i = actualPosition[0] / elementSize;
-    let newPosition = elementSize * (i + 1);
-    actualPosition[0] = newPosition;
-    startGame();
-    game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
+    if (!isGameOver){
+        clear();
+        let actualCoordenadas = coordenadas(actualPosition);
+        console.log(actualCoordenadas);
+        if (isPossible(actualCoordenadas[0] + 1, actualCoordenadas[1])){
+            actualPosition[0] = elementSize * (actualCoordenadas[0] + 1);
+            startGame();
+            game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
+        }else {
+            gameOver();
+        }
+    }
 }
 
 function moveLeft(){
-    clear();
-    game.fillRect(actualPosition[0], actualPosition[1] - 43, 52, 58);
-    let i = actualPosition[0] / elementSize;
-    let newPosition = elementSize * (i - 1);
-    actualPosition[0] = newPosition;
-    startGame();
-    game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
+    if (!isGameOver){
+        clear();
+        let actualCoordenadas = coordenadas(actualPosition);
+        console.log(actualCoordenadas);
+        if (isPossible(actualCoordenadas[0] - 1, actualCoordenadas[1])){
+            actualPosition[0] = elementSize * (actualCoordenadas[0] - 1);
+            startGame();
+            game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
+        }else {
+            gameOver();
+        }
+    }
 }
