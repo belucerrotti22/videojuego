@@ -4,13 +4,16 @@ const arribaButton = document.querySelector('#arriba');
 const abajoButton = document.querySelector('#abajo');
 const derechaButton = document.querySelector('#derecha');
 const izquierdaButton = document.querySelector('#izquierda');
+const cartelGameOver = document.querySelector('#game-over');
 
 const player = 'PLAYER';
+const explotion = 'BOMB_COLLISION';
 const door = 'O';
 let elementSize;
 let canvaSize;
 let actualPosition = [undefined, undefined];
 let nivelActual = 0;
+let mapaActual = [];
 
 window.addEventListener('load', resize);
 window.addEventListener('resize', resize);
@@ -61,17 +64,30 @@ function startGame(){
     let mapStructure = iterator(maps);
     
     for (let i = 0; i < 10; i++){
-        for (let j = 1; j < 11; j++){
+        mapaActual[i] = [];
+        for (let j = 0; j < 10; j++){
             let space = mapStructure.next().value
-            if (actualPosition[0] == undefined && space == door){
-                actualPosition[0] = elementSize * i;
-                actualPosition[1] = elementSize * j;
-                game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
-            }else {
-                game.fillText(emojis[space], elementSize * i, elementSize * j);
-            }            
+            mapaActual[i][j] = space;
         }
     }
+    llenarMapa();
+    console.log(mapaActual);
+}
+
+function llenarMapa(){
+    for (let i = 0; i < 10; i++){
+        for (let j = 0; j < 10; j++){
+            let space = mapaActual[j][i];
+            if (actualPosition[0] == undefined && space == door){
+                actualPosition[0] = elementSize * i;
+                actualPosition[1] = elementSize * (j + 1);
+                game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
+            }else {
+                game.fillText(emojis[space], elementSize * i, elementSize * (j + 1));
+            }   
+        }
+    }
+    
 }
 
 function clear(){
@@ -79,27 +95,44 @@ function clear(){
     game.fillRect(actualPosition[0], actualPosition[1] - 43, 52, 58);
 }
 
-/*
+
 function isPossible(x, y){
-    let mapa = mapaActual();
-    if(mapa[x][y] == 'X'){
+    if(mapaActual[y][x] == 'X'){
+        mapaActual[y][x] = explotion;
+        llenarMapa();
+        game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
         return false;
     }
-}*/
+    return true;
+}
+
+function coordenadas(position){
+    return [(position[0] / elementSize), (position[1] / elementSize) - 1];
+}
+
+function gameOver(){
+    setTimeout(() => {
+        cartelGameOver.classList.toggle('inactive');
+    }, 500);
+}
 
 function moveUp(){
     clear();
-    let j = actualPosition[1] / elementSize;
-    let newPosition = elementSize * (j - 1);
-    actualPosition[1] = newPosition;
-    startGame();
-    game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
+    let actualCoordenadas = coordenadas(actualPosition);
+    console.log(actualCoordenadas);
+    if (isPossible(actualCoordenadas[0], actualCoordenadas[1] - 1)){
+        actualPosition[1] = elementSize * (actualCoordenadas[1]);
+        startGame();
+        game.fillText(emojis[player], actualPosition[0], actualPosition[1]);
+    }else {
+        gameOver();
+    }
 }
 
 function moveDown(){
     clear();
     game.fillRect(actualPosition[0], actualPosition[1] - 43, 52, 58);
-    let j = actualPosition[1] / elementSize;
+    let j = (actualPosition[1] / elementSize);
     let newPosition = elementSize * (j + 1);
     actualPosition[1] = newPosition;
     startGame();
