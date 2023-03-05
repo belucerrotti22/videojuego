@@ -2,14 +2,32 @@ body {
     background-color: rgb(34, 21, 82);
 }
 
-body div:first-child{
+.nav {
+    display: inline-flex;
+    color: aliceblue;
+    font-size: large;
+    font-family: 'Jost', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.nav p {
+    margin: 7 0;
+}
+
+.nav img {
+    margin-left: -18px;
+    margin-right: -18px;
+}
+
+.game-container{
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .main-container {
-    margin-top: 40px;
+    margin-top: -29px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18,6 +36,7 @@ body div:first-child{
 .buttons {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .buttons button {
@@ -134,6 +153,11 @@ body div:first-child{
 .game-won button:active {
     background: rgb(119, 89, 8);
     border: 2px solid rgb(119, 89, 8);
+}
+
+img {
+    margin-top: -39px;
+    width: 120px;
 }
 
 .inactive {
