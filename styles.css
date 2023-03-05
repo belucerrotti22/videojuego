@@ -36,32 +36,46 @@
     background-color: rgb(131, 154, 161);
 }
 
-.game-over {
-    border: 4px solid rgb(122, 18, 18);
+.sign {
     border-radius: 8px;
-    background-color: brown;
-    color: white;
     width: 30%;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: absolute;
-    top: 30%;
+    top: 35%;
     left: 35%;
 }
 
-.game-over div {
-    margin-bottom: 10px;
+.sign div {
+    margin-top: 10px;
+    margin-bottom: 14px;
+}
+
+.sign p {
+    margin: 7px;
+}
+
+.sign p:first-child {
+    margin-top: 17px;
+}
+
+.sign button {
+    background: none;
+    border-radius: 10px;
+    width: 100px;
+    height: 30px;
+}
+
+.game-over {
+    border: 4px solid rgb(122, 18, 18);
+    background-color: brown;
+    color: white;
 }
 
 .game-over button {
-    background: none;
     border: 2px solid rgb(122, 18, 18);
     color: rgb(253, 176, 176);
-    border-radius: 10px;
-    width: 70px;
-    height: 30px;
-
 }
 
 .game-over button:hover {
@@ -70,6 +84,25 @@
 .game-over button:active {
     background: rgb(99, 10, 10);
     border: 2px solid rgb(99, 10, 10);
+}
+
+.game-won {
+    border: 4px solid rgb(139, 106, 14);
+    background-color: rgb(230, 193, 91);
+    color: rgb(151, 117, 44);
+}
+
+.game-won button {
+    border: 2px solid rgb(139, 106, 14);
+    color: rgb(245, 222, 161);
+}
+
+.game-won button:hover {
+    background: rgb(139, 106, 14);
+}
+.game-won button:active {
+    background: rgb(119, 89, 8);
+    border: 2px solid rgb(119, 89, 8);
 }
 
 .inactive {
