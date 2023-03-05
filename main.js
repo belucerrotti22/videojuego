@@ -1,3 +1,6 @@
+// FALTA VERIFICAR QUE EL JUGADOR NO SE SALGA DEL MAPA, AGREGAR LO DE LAS VIDAS Y EL TIEMPO, 
+// HACER QUE EL USUARIO SE PUEDA MOVER SIN TOCAR LOS BOTONES, SOLO EL TECLADO Y LO DEL TIEMPO RÉCORD
+
 const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
 const arribaButton = document.querySelector('#arriba');
@@ -50,9 +53,9 @@ function restartGame(){
 function resize(){
 
     if (window.innerHeight > window.innerWidth){
-        canvaSize = window.innerWidth * 0.8;
+        canvaSize = window.innerWidth * 0.75;
     }else {
-        canvaSize = window.innerHeight * 0.8;
+        canvaSize = window.innerHeight * 0.75;
     }
 
     canvas.setAttribute('height', canvaSize);
@@ -104,7 +107,6 @@ function llenarMapa(){
             }   
         }
     }
-    
 }
 
 function clear(){
