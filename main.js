@@ -1,4 +1,4 @@
-// FALTA VERIFICAR QUE EL JUGADOR NO SE SALGA DEL MAPA, AGREGAR LO DE LAS VIDAS Y EL TIEMPO, 
+// AGREGAR LO DE LAS VIDAS Y EL TIEMPO, 
 // Y LO DEL TIEMPO RÉCORD
 
 const canvas = document.querySelector('#game');
@@ -150,7 +150,7 @@ function gameOver(x, y){
     game.fillText(emojis[player], playerPos.x, playerPos.y);
     setTimeout(() => {
         cartelGameOver.classList.toggle('inactive');
-    }, 300);
+    }, 360);
 }
 
 function makeMove(actualCoords, move){
@@ -174,18 +174,20 @@ function makeMove(actualCoords, move){
 }
 
 function verifyMove(actualCoords, newX, newY, move){
-    if (isThereABomb(newX, newY)){
-        gameOver(newX, newY);
-    }else if (isGameWon(newX, newY)) {
-        cartelGameWon.classList.toggle('inactive');
-    }else {
-        if (isLevelWon(newX, newY)){
-            nivelActual++;
-            clearAll();
+    if (mapaActual[newY][newX]){
+        if (isThereABomb(newX, newY)){
+            gameOver(newX, newY);
+        }else if (isGameWon(newX, newY)) {
+            cartelGameWon.classList.toggle('inactive');
+        }else {
+            if (isLevelWon(newX, newY)){
+                nivelActual++;
+                clearAll();
+            }
+            makeMove(actualCoords, move);
+            startGame();
+            game.fillText(emojis[player], playerPos.x, playerPos.y);
         }
-        makeMove(actualCoords, move);
-        startGame();
-        game.fillText(emojis[player], playerPos.x, playerPos.y);
     }
 }
 
