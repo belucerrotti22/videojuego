@@ -22,6 +22,7 @@ const firstLevel = 0;
 const secondLevel = 1;
 const finalLevel = 2;
 let isGameOver = false;
+let isGameFinished = false;
 let elementSize;
 let canvaSize;
 let nivelActual = firstLevel;
@@ -179,6 +180,7 @@ function verifyMove(actualCoords, newX, newY, move){
             gameOver(newX, newY);
         }else if (isGameWon(newX, newY)) {
             cartelGameWon.classList.toggle('inactive');
+            isGameFinished = true;
         }else {
             if (isLevelWon(newX, newY)){
                 nivelActual++;
@@ -192,7 +194,7 @@ function verifyMove(actualCoords, newX, newY, move){
 }
 
 function moveUp(){
-    if (!isGameOver){
+    if (!isGameOver && !isGameFinished){
         let actualCoords = coordenadas(playerPos);
         let newX = Math.round(actualCoords.x);
         let newY = Math.round(actualCoords.y - 1);
@@ -201,7 +203,7 @@ function moveUp(){
 }
 
 function moveDown(){
-    if (!isGameOver){
+    if (!isGameOver && !isGameFinished){
         let actualCoords = coordenadas(playerPos);
         let newX = Math.round(actualCoords.x);
         let newY = Math.round(actualCoords.y + 1);
@@ -210,7 +212,7 @@ function moveDown(){
 }
 
 function moveRight(){
-    if (!isGameOver){
+    if (!isGameOver && !isGameFinished){
         let actualCoords = coordenadas(playerPos);
         let newX = Math.round(actualCoords.x + 1);
         let newY = Math.round(actualCoords.y);
@@ -219,7 +221,7 @@ function moveRight(){
 }
 
 function moveLeft(){
-    if (!isGameOver){
+    if (!isGameOver && !isGameFinished){
         let actualCoords = coordenadas(playerPos);
         let newX = Math.round(actualCoords.x - 1);
         let newY = Math.round(actualCoords.y);
