@@ -1,5 +1,5 @@
 // FALTA VERIFICAR QUE EL JUGADOR NO SE SALGA DEL MAPA, AGREGAR LO DE LAS VIDAS Y EL TIEMPO, 
-// HACER QUE EL USUARIO SE PUEDA MOVER SIN TOCAR LOS BOTONES, SOLO EL TECLADO Y LO DEL TIEMPO RÉCORD
+// Y LO DEL TIEMPO RÉCORD
 
 const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
@@ -41,8 +41,6 @@ derechaButton.addEventListener('click', moveRight);
 izquierdaButton.addEventListener('click', moveLeft);
 buttonTryAgain.addEventListener('click', restartGame);
 buttonPlayAgain.addEventListener('click', restartGame);
-
-
 
 function moveByKeys(event){
     if (event.key == 'ArrowUp') moveUp();
@@ -102,10 +100,12 @@ function startGame(){
             mapaActual[i][j] = space;
         }
     }
+
     llenarMapa();
 }
 
 function llenarMapa(){
+    clearAll();
     for (let i = 0; i < 10; i++){
         for (let j = 0; j < 10; j++){
             let space = mapaActual[j][i];
@@ -123,16 +123,9 @@ function llenarMapa(){
     }
 }
 
-function clear(){
-    game.fillStyle = "rgb(131, 154, 161)";
-    game.fillRect(playerPos.x + 6, playerPos.y - 41, 45, 50);
-}
-
 function clearAll(){
-    game.fillStyle = "rgb(131, 154, 161)";
-    game.fillRect(0, 0, canvas.width, canvas.height);
+    game.clearRect(0, 0, canvaSize, canvaSize);
 }
-
 
 function isThereABomb(x, y){
     return mapaActual[y][x] == bomb;
@@ -190,7 +183,6 @@ function verifyMove(actualCoords, newX, newY, move){
             nivelActual++;
             clearAll();
         }
-        clear();
         makeMove(actualCoords, move);
         startGame();
         game.fillText(emojis[player], playerPos.x, playerPos.y);
