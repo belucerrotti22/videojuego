@@ -24,10 +24,15 @@ const finalLevel = 2;
 let isGameOver = false;
 let elementSize;
 let canvaSize;
-let actualPos = [undefined, undefined];
 let nivelActual = firstLevel;
 let mapaActual = [];
 
+const playerPos = {
+    x: undefined,
+    y: undefined
+}
+
+window.addEventListener('keydown', moveByKeys);
 window.addEventListener('load', resize);
 window.addEventListener('resize', resize);
 arribaButton.addEventListener('click', moveUp);
@@ -37,6 +42,15 @@ izquierdaButton.addEventListener('click', moveLeft);
 buttonTryAgain.addEventListener('click', restartGame);
 buttonPlayAgain.addEventListener('click', restartGame);
 
+
+
+function moveByKeys(event){
+    if (event.key == 'ArrowUp') moveUp();
+    else if (event.key == 'ArrowDown') moveDown();
+    else if (event.key == 'ArrowRight') moveRight();
+    else if (event.key == 'ArrowLeft') moveLeft();
+}
+
 function restartGame(){
     if (isGameOver){
         isGameOver = false;
@@ -45,7 +59,8 @@ function restartGame(){
         cartelGameWon.classList.toggle('inactive');
     }
     nivelActual = firstLevel;
-    actualPos = [undefined, undefined];
+    playerPos.x = undefined;
+    playerPos.y = undefined;
     clearAll();
     startGame();
 }
@@ -88,17 +103,16 @@ function startGame(){
         }
     }
     llenarMapa();
-    console.log(mapaActual);
 }
 
 function llenarMapa(){
     for (let i = 0; i < 10; i++){
         for (let j = 0; j < 10; j++){
             let space = mapaActual[j][i];
-            if (actualPos[0] == undefined && space == door){
-                actualPos[0] = elementSize * i;
-                actualPos[1] = elementSize * (j + 1);
-                game.fillText(emojis[player], actualPos[0], actualPos[1]);
+            if (playerPos.x == undefined && space == door){
+                playerPos.x = elementSize * i;
+                playerPos.y = elementSize * (j + 1);
+                game.fillText(emojis[player], playerPos.x, playerPos.y);
             }else if (space == gift && nivelActual == finalLevel) {
                 mapaActual[j][i] = win;
                 game.fillText(emojis[win], elementSize * i, elementSize * (j + 1));
@@ -111,7 +125,7 @@ function llenarMapa(){
 
 function clear(){
     game.fillStyle = "rgb(131, 154, 161)";
-    game.fillRect(actualPos[0] + 6, actualPos[1] - 41, 45, 50);
+    game.fillRect(playerPos.x + 6, playerPos.y - 41, 45, 50);
 }
 
 function clearAll(){
@@ -133,103 +147,88 @@ function isLevelWon(x, y){
 }
 
 function coordenadas(position){
-    return [(position[0] / elementSize), (position[1] / elementSize) - 1];
+    return {x: (position.x / elementSize), y:(position.y / elementSize) - 1};
 }
 
 function gameOver(x, y){
     isGameOver = true;
     mapaActual[y][x] = explotion;
     llenarMapa();
-    game.fillText(emojis[player], actualPos[0], actualPos[1]);
+    game.fillText(emojis[player], playerPos.x, playerPos.y);
     setTimeout(() => {
         cartelGameOver.classList.toggle('inactive');
     }, 300);
 }
 
+function makeMove(actualCoords, move){
+    switch (move) {
+        case 'Up':
+            playerPos.y = elementSize * (actualCoords.y);  
+            break;
+
+        case 'Down':
+            playerPos.y = elementSize * (actualCoords.y + 2);
+            break;
+
+        case 'Right':
+            playerPos.x = elementSize * (actualCoords.x + 1);
+            break;
+
+        case 'Left':
+            playerPos.x = elementSize * (actualCoords.x - 1);
+            break;
+    }
+}
+
+function verifyMove(actualCoords, newX, newY, move){
+    if (isThereABomb(newX, newY)){
+        gameOver(newX, newY);
+    }else if (isGameWon(newX, newY)) {
+        cartelGameWon.classList.toggle('inactive');
+    }else {
+        if (isLevelWon(newX, newY)){
+            nivelActual++;
+            clearAll();
+        }
+        clear();
+        makeMove(actualCoords, move);
+        startGame();
+        game.fillText(emojis[player], playerPos.x, playerPos.y);
+    }
+}
+
 function moveUp(){
     if (!isGameOver){
-        let actualCoords = coordenadas(actualPos);
-        let newX = actualCoords[0];
-        let newY = actualCoords[1] - 1;
-        if (isThereABomb(newX, newY)){
-            gameOver(newX, newY);
-        }else if (isGameWon(newX, newY)) {
-            cartelGameWon.classList.toggle('inactive');
-        }else {
-            if (isLevelWon(newX, newY)){
-                nivelActual++;
-                clearAll();
-            }
-            clear();
-            actualPos[1] = elementSize * (actualCoords[1]);
-            startGame();
-            game.fillText(emojis[player], actualPos[0], actualPos[1]);
-        }
+        let actualCoords = coordenadas(playerPos);
+        let newX = Math.round(actualCoords.x);
+        let newY = Math.round(actualCoords.y - 1);
+        verifyMove(actualCoords, newX, newY, 'Up');
     }
 }
 
 function moveDown(){
     if (!isGameOver){
-        let actualCoords = coordenadas(actualPos);
-        let newX = actualCoords[0];
-        let newY = actualCoords[1] + 1;
-        if (isThereABomb(newX, newY)){
-            gameOver(newX, newY);
-        }else if (isGameWon(newX, newY)) {
-            cartelGameWon.classList.toggle('inactive');
-        }else {
-            if (isLevelWon(newX, newY)){
-                nivelActual++;
-                clearAll();
-            }
-            clear();
-            actualPos[1] = elementSize * (actualCoords[1] + 2);
-            startGame();
-            game.fillText(emojis[player], actualPos[0], actualPos[1]);
-        }
+        let actualCoords = coordenadas(playerPos);
+        let newX = Math.round(actualCoords.x);
+        let newY = Math.round(actualCoords.y + 1);
+        verifyMove(actualCoords, newX, newY, 'Down');
     }
 }
 
 function moveRight(){
     if (!isGameOver){
-        let actualCoords = coordenadas(actualPos);
-        let newX = actualCoords[0] + 1;
-        let newY = actualCoords[1];
-        if (isThereABomb(newX, newY)){
-            gameOver(newX, newY);
-        }else if (isGameWon(newX, newY)) {
-            cartelGameWon.classList.toggle('inactive');
-        }else {
-            if (isLevelWon(newX, newY)){
-                nivelActual++;
-                clearAll();
-            }
-            clear();
-            actualPos[0] = elementSize * (actualCoords[0] + 1);
-            startGame();
-            game.fillText(emojis[player], actualPos[0], actualPos[1]);
-        }
+        let actualCoords = coordenadas(playerPos);
+        let newX = Math.round(actualCoords.x + 1);
+        let newY = Math.round(actualCoords.y);
+        verifyMove(actualCoords, newX, newY, 'Right');
     }
 }
 
 function moveLeft(){
     if (!isGameOver){
-        let actualCoords = coordenadas(actualPos);
-        let newX = actualCoords[0] - 1;
-        let newY = actualCoords[1];
-        if (isThereABomb(newX, newY)){
-            gameOver(newX, newY);
-        }else if (isGameWon(newX, newY)) {
-            cartelGameWon.classList.toggle('inactive');
-        }else {
-            if (isLevelWon(newX, newY)){
-                nivelActual++;
-                clearAll();
-            }
-            clear();
-            actualPos[0] = elementSize * (actualCoords[0] - 1);
-            startGame();
-            game.fillText(emojis[player], actualPos[0], actualPos[1]);
-        }
+        let actualCoords = coordenadas(playerPos);
+        let newX = Math.round(actualCoords.x - 1);
+        let newY = Math.round(actualCoords.y);
+        verifyMove(actualCoords, newX, newY, 'Left');
     }
 }
