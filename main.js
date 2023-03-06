@@ -75,9 +75,10 @@ function resize(){
     canvas.setAttribute('height', canvaSize);
     canvas.setAttribute('width', canvaSize);
 
-    elementSize = (canvaSize - 12) / 10;
+    elementSize = (canvaSize - 9) / 10;
 
     startGame();
+    game.fillText(emojis[player], playerPos.x, playerPos.y);
 }
 
 function * iterator(maps){

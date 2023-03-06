@@ -82,7 +82,7 @@ body {
 #game {
     border-radius: 2px;
     border: 3px solid rgb(76, 84, 196);
-    padding: 8px;
+    padding: 12px;
     background-color: rgb(131, 154, 161);
     box-shadow: 10px 5px 18px rgb(44, 38, 73);
 }
@@ -166,13 +166,27 @@ img {
 }
 
 @media (max-width: 890px) {
+
+    .game-container {
+        display: block;
+    }
+
     .buttons button {
-        width: 70px;
-        height: 28px;
+        width: 60px;
+        height: 22px;
         font-size: 12px;
     }
 
     .buttons div {
-        display: contents;
+        display: inline;
+    }
+
+    .buttons {
+        margin-bottom: 40px;
+        margin-top: -26px;
+    }
+
+    .info-game {
+        display: none;
     }
 }
