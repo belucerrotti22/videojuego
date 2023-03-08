@@ -1,5 +1,4 @@
-// AGREGAR LO DE LAS VIDAS Y EL TIEMPO, 
-// Y LO DEL TIEMPO RÉCORD
+// AGREGAR LO DEL TIEMPO Y LO DEL TIEMPO RÉCORD
 
 const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
@@ -11,6 +10,7 @@ const cartelGameOver = document.querySelector('#game-over');
 const cartelGameWon = document.querySelector('#game-won');
 const buttonTryAgain = document.querySelector('#try-again');
 const buttonPlayAgain = document.querySelector('#play-again');
+const livesCounterText = document.querySelector('#lives');
 
 const player = 'PLAYER';
 const explotion = 'BOMB_COLLISION';
@@ -21,12 +21,20 @@ const door = 'O';
 const firstLevel = 0;
 const secondLevel = 1;
 const finalLevel = 2;
+const full = 3;
+const empty = 0;
+let lives = full;
 let isGameOver = false;
 let isGameFinished = false;
 let elementSize;
 let canvaSize;
 let nivelActual = firstLevel;
 let mapaActual = [];
+
+const inicialPos = {
+    x: undefined,
+    y: undefined
+}
 
 const playerPos = {
     x: undefined,
@@ -42,6 +50,18 @@ derechaButton.addEventListener('click', moveRight);
 izquierdaButton.addEventListener('click', moveLeft);
 buttonTryAgain.addEventListener('click', restartGame);
 buttonPlayAgain.addEventListener('click', restartGame);
+
+livesCounter();
+
+function livesCounter(){
+    let text = 'Lives left: ';
+    let i = lives;
+    while (i > empty){
+        text += emojis['HEART'];
+        i--;
+    }
+    livesCounterText.innerHTML = text;
+}
 
 function moveByKeys(event){
     if (event.key == 'ArrowUp') moveUp();
@@ -60,6 +80,8 @@ function restartGame(){
     nivelActual = firstLevel;
     playerPos.x = undefined;
     playerPos.y = undefined;
+    lives = full;
+    livesCounter();
     clearAll();
     startGame();
 }
@@ -111,6 +133,11 @@ function llenarMapa(){
     for (let i = 0; i < 10; i++){
         for (let j = 0; j < 10; j++){
             let space = mapaActual[j][i];
+            if (space == door){
+                inicialPos.x = elementSize * i;
+                inicialPos.y = elementSize * (j + 1);
+            }
+
             if (playerPos.x == undefined && space == door){
                 playerPos.x = elementSize * i;
                 playerPos.y = elementSize * (j + 1);
@@ -145,9 +172,7 @@ function coordenadas(position){
     return {x: (position.x / elementSize), y:(position.y / elementSize) - 1};
 }
 
-function gameOver(x, y){
-    isGameOver = true;
-    mapaActual[y][x] = explotion;
+function gameOver(){
     llenarMapa();
     game.fillText(emojis[player], playerPos.x, playerPos.y);
     setTimeout(() => {
@@ -178,7 +203,13 @@ function makeMove(actualCoords, move){
 function verifyMove(actualCoords, newX, newY, move){
     if (mapaActual[newY][newX]){
         if (isThereABomb(newX, newY)){
-            gameOver(newX, newY);
+            lives--;
+            livesCounter();
+            playerPos.x = inicialPos.x;
+            playerPos.y = inicialPos.y;
+            mapaActual[newY][newX] = explotion;
+            llenarMapa();
+            game.fillText(emojis[player], playerPos.x, playerPos.y);
         }else if (isGameWon(newX, newY)) {
             cartelGameWon.classList.toggle('inactive');
             isGameFinished = true;
@@ -186,11 +217,21 @@ function verifyMove(actualCoords, newX, newY, move){
             if (isLevelWon(newX, newY)){
                 nivelActual++;
                 clearAll();
+                makeMove(actualCoords, move);
+                startGame();
+            }else {
+                makeMove(actualCoords, move);
+                llenarMapa();
             }
-            makeMove(actualCoords, move);
-            startGame();
             game.fillText(emojis[player], playerPos.x, playerPos.y);
         }
+    }
+}
+
+function verifyLives(){
+    if (lives == empty){
+        isGameOver = true;
+        gameOver();
     }
 }
 
@@ -200,6 +241,7 @@ function moveUp(){
         let newX = Math.round(actualCoords.x);
         let newY = Math.round(actualCoords.y - 1);
         verifyMove(actualCoords, newX, newY, 'Up');
+        verifyLives();
     }
 }
 
@@ -209,6 +251,7 @@ function moveDown(){
         let newX = Math.round(actualCoords.x);
         let newY = Math.round(actualCoords.y + 1);
         verifyMove(actualCoords, newX, newY, 'Down');
+        verifyLives();
     }
 }
 
@@ -218,6 +261,7 @@ function moveRight(){
         let newX = Math.round(actualCoords.x + 1);
         let newY = Math.round(actualCoords.y);
         verifyMove(actualCoords, newX, newY, 'Right');
+        verifyLives();
     }
 }
 
@@ -227,5 +271,6 @@ function moveLeft(){
         let newX = Math.round(actualCoords.x - 1);
         let newY = Math.round(actualCoords.y);
         verifyMove(actualCoords, newX, newY, 'Left');
+        verifyLives();
     }
 }
