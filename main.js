@@ -11,6 +11,8 @@ const cartelGameWon = document.querySelector('#game-won');
 const buttonTryAgain = document.querySelector('#try-again');
 const buttonPlayAgain = document.querySelector('#play-again');
 const livesCounterText = document.querySelector('#lives');
+const gameClock = document.querySelector('#time');
+const recordTime = document.querySelector('#record');
 
 const player = 'PLAYER';
 const explotion = 'BOMB_COLLISION';
@@ -23,6 +25,7 @@ const secondLevel = 1;
 const finalLevel = 2;
 const full = 3;
 const empty = 0;
+let clockNumber = 0;
 let lives = full;
 let isGameOver = false;
 let isGameFinished = false;
@@ -30,6 +33,8 @@ let elementSize;
 let canvaSize;
 let nivelActual = firstLevel;
 let mapaActual = [];
+let timer;
+let record = 0;
 
 const inicialPos = {
     x: undefined,
@@ -52,6 +57,16 @@ buttonTryAgain.addEventListener('click', restartGame);
 buttonPlayAgain.addEventListener('click', restartGame);
 
 livesCounter();
+startClock();
+showRecord();
+
+function showRecord(){
+    recordTime.innerHTML = 'Recórd: ' + record;
+}
+
+function startClock(){
+    timer = setInterval(() => clockwork(), 10);
+}
 
 function livesCounter(){
     let text = 'Lives left: ';
@@ -63,6 +78,12 @@ function livesCounter(){
     livesCounterText.innerHTML = text;
 }
 
+function clockwork(){
+    clockNumber += 0.01;
+    gameClock.innerHTML = 'Time: ' + clockNumber.toFixed(2);
+}
+
+
 function moveByKeys(event){
     if (event.key == 'ArrowUp') moveUp();
     else if (event.key == 'ArrowDown') moveDown();
@@ -71,19 +92,23 @@ function moveByKeys(event){
 }
 
 function restartGame(){
+    clockNumber = 0;
     if (isGameOver){
         isGameOver = false;
         cartelGameOver.classList.toggle('inactive');
     }else {
         cartelGameWon.classList.toggle('inactive');
+        isGameFinished = false;
     }
     nivelActual = firstLevel;
     playerPos.x = undefined;
     playerPos.y = undefined;
     lives = full;
-    livesCounter();
     clearAll();
     startGame();
+    livesCounter();
+    startClock();
+    showRecord();
 }
 
 function resize(){
@@ -172,8 +197,13 @@ function coordenadas(position){
     return {x: (position.x / elementSize), y:(position.y / elementSize) - 1};
 }
 
+function checkRecord(){
+    if (clockNumber < record || record == 0) record = clockNumber.toFixed(2);
+}
+
 function gameOver(){
     llenarMapa();
+    clearInterval(timer);
     game.fillText(emojis[player], playerPos.x, playerPos.y);
     setTimeout(() => {
         cartelGameOver.classList.toggle('inactive');
@@ -212,6 +242,8 @@ function verifyMove(actualCoords, newX, newY, move){
             game.fillText(emojis[player], playerPos.x, playerPos.y);
         }else if (isGameWon(newX, newY)) {
             cartelGameWon.classList.toggle('inactive');
+            clearInterval(timer);
+            checkRecord();
             isGameFinished = true;
         }else {
             if (isLevelWon(newX, newY)){
